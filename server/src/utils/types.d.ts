@@ -12,19 +12,5 @@ export interface CustomError extends Error {
   status?: number;
 }
 
-export type TPlanName = "personal" | "vercel" | "annual";
-export type TPlanFrequency = "Daily" | "Monthly" | "Yearly";
-export type TRecordType = "CNAME" | "A" | "TXT";
-export type TPlanStatus =
-  | "active"
-  | "processing"
-  | "expired"
-  | "cancelled"
-  | "overdue";
-
-export type TRecordUpdateConfig = {
-  content?: string;
-  proxied?: boolean;
-  ttl?: number;
-  type?: TRecordType;
-};
+export type TCurrency = "INR" | "USD" | "EUR";
+export type TTransactionStatus = "accepted" | "pending" | "rejected";

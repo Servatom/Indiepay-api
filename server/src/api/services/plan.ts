@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { TPlanStatus } from "../../utils/types";
 
 export const planService = {
   // createPlan: async (plan: IPlan) => {

@@ -4,9 +4,14 @@ import { IUser } from "../models/user";
 
 export interface LoginRequest extends Request {
   body: {
-    phoneNumber: string;
+    email: string;
     firebaseUID: string;
   };
+}
+
+export interface AuthResponse {
+  token: string;
+  user: IUser;
 }
 
 export interface UpdateUserRequest extends AuthenticatedRequest {
