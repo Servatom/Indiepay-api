@@ -14,3 +14,4 @@ export interface CustomError extends Error {
 
 export type TCurrency = "INR" | "USD" | "EUR";
 export type TTransactionStatus = "ACCEPTED" | "PENDING" | "REJECTED";
+export type TWebhookStatus = "SUCCESS" | "FAILURE";

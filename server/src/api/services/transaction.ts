@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { IProject, Project } from "../models/project";
 import {
   ITransaction,
   TNewTransaction,

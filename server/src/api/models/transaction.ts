@@ -27,6 +27,9 @@ const transactionScheme: Schema<ITransaction> = new mongoose.Schema({
   timestamp: { type: Date, required: true },
 });
 
-const Transaction = mongoose.model<ITransaction>("User", transactionScheme);
+const Transaction = mongoose.model<ITransaction>(
+  "Transaction",
+  transactionScheme
+);
 
 export { Transaction, ITransaction, TNewTransaction };
