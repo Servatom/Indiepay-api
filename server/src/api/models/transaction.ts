@@ -13,6 +13,9 @@ interface ITransaction extends Document {
   timestamp: Date;
 }
 
+// Create a type for NewTransaction, which is a subset of ITransaction with the _id, projectID field omitted
+type TNewTransaction = Omit<ITransaction, "_id" | "projectID">;
+
 const transactionScheme: Schema<ITransaction> = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   projectID: { type: String, required: true, ref: "Project" },
@@ -26,4 +29,4 @@ const transactionScheme: Schema<ITransaction> = new mongoose.Schema({
 
 const Transaction = mongoose.model<ITransaction>("User", transactionScheme);
 
-export { Transaction, ITransaction };
+export { Transaction, ITransaction, TNewTransaction };

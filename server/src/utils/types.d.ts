@@ -13,4 +13,4 @@ export interface CustomError extends Error {
 }
 
 export type TCurrency = "INR" | "USD" | "EUR";
-export type TTransactionStatus = "accepted" | "pending" | "rejected";
+export type TTransactionStatus = "ACCEPTED" | "PENDING" | "REJECTED";

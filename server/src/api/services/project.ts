@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { IProject, Project } from "../models/project";
-import { create } from "domain";
 
 export const projectService = {
   createProject: async (project: IProject): Promise<IProject | unknown> => {
