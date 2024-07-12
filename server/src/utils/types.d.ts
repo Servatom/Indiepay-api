@@ -1,11 +1,9 @@
 import { Request } from "express";
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+import { IUser } from "../api/models/user";
 
 export interface AuthenticatedRequest extends Request {
-  userData?: {
-    userID: string;
-    phoneNumber: string;
-    firebaseUID: string;
-  };
+  userData?: IUser;
 }
 
 export interface CustomError extends Error {

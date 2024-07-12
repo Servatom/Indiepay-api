@@ -1,63 +1,43 @@
 import mongoose from "mongoose";
 import { IUser, User } from "../models/user";
 import jwt from "jsonwebtoken";
+import { auth } from "../../firebaseAdmin";
 
 export const userService = {
-  loginUser: async (email: string, firebaseUID: string) => {
+  loginUser: async (token: string, firebaseUID: string) => {
     try {
-      const result = await User.findOne({
-        email: email,
+      const decodedToken = await auth.verifyIdToken(token);
+      if (decodedToken.uid !== firebaseUID) {
+        return null;
+      }
+
+      let result = await User.findOne({
         firebaseUID: firebaseUID,
       });
 
       if (!result) {
-        return null;
+        const user = new User({
+          _id: new mongoose.Types.ObjectId(),
+          email: decodedToken.email,
+          firebaseUID: firebaseUID,
+        });
+
+        result = await user.save();
       }
 
-      const token = jwt.sign(
+      const jwtToken = jwt.sign(
         {
-          email: email,
+          email: result.email,
           userID: result._id,
           firebaseUID: firebaseUID,
         },
         process.env.JWT_KEY!,
         {
-          expiresIn: "7d",
+          expiresIn: "60d",
         }
       );
 
-      return { token, user: result };
-    } catch (err) {
-      console.log(err);
-      return err;
-    }
-  },
-
-  createUser: async (
-    email: string,
-    firebaseUID: string
-  ): Promise<IUser | unknown> => {
-    try {
-      const user = new User({
-        _id: new mongoose.Types.ObjectId(),
-        email: email,
-        firebaseUID: firebaseUID,
-      });
-      const result: IUser = await user.save();
-
-      const token = jwt.sign(
-        {
-          email: email,
-          userID: result._id,
-          firebaseUID: firebaseUID,
-        },
-        process.env.JWT_KEY!,
-        {
-          expiresIn: "7d",
-        }
-      );
-
-      return { token, user: result };
+      return { token: jwtToken, user: result };
     } catch (err) {
       console.log(err);
       return err;
