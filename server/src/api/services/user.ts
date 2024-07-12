@@ -4,7 +4,13 @@ import jwt from "jsonwebtoken";
 import { auth } from "../../firebaseAdmin";
 
 export const userService = {
-  loginUser: async (token: string, firebaseUID: string) => {
+  loginUser: async (
+    token: string,
+    firebaseUID: string,
+    email: string,
+    provider: string,
+    displayName: string
+  ) => {
     try {
       const decodedToken = await auth.verifyIdToken(token);
       if (decodedToken.uid !== firebaseUID) {
@@ -18,8 +24,10 @@ export const userService = {
       if (!result) {
         const user = new User({
           _id: new mongoose.Types.ObjectId(),
-          email: decodedToken.email,
+          email: email,
           firebaseUID: firebaseUID,
+          provider: provider,
+          displayName: displayName,
         });
 
         result = await user.save();
@@ -40,7 +48,7 @@ export const userService = {
       return { token: jwtToken, user: result };
     } catch (err) {
       console.log(err);
-      return err;
+      throw err;
     }
   },
 

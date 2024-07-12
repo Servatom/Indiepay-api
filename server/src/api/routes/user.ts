@@ -10,7 +10,7 @@ const router = express.Router();
 router.post(
   "/login",
   async (req: LoginRequest, res: Response, next: NextFunction) => {
-    const { token, firebaseUID } = req.body;
+    const { token, firebaseUID, email, provider, displayName } = req.body;
     // check if user exists in db with phoneNumber and firebaseUID combination
     // if not, create new user
     // return jwt
@@ -19,12 +19,21 @@ router.post(
     try {
       const result = (await userService.loginUser(
         token,
-        firebaseUID
+        firebaseUID,
+        email,
+        provider,
+        displayName
       )) as AuthResponse | null;
 
       if (!result) {
         return res.status(401).json({
           message: "Login failed. Try again later.",
+        });
+      } else {
+        return res.status(200).json({
+          message: "Login successful",
+          token: result.token,
+          user: result.user,
         });
       }
     } catch (err) {

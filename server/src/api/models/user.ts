@@ -7,6 +7,8 @@ interface IUser extends Document {
   onWaitlist: boolean;
   isActive: boolean;
   defaultVPA: string;
+  provider: string;
+  displayName: string;
 }
 
 const userScheme: Schema<IUser> = new mongoose.Schema({
@@ -16,7 +18,9 @@ const userScheme: Schema<IUser> = new mongoose.Schema({
   email: { type: String, required: true },
   onWaitlist: { type: Boolean, required: true, default: false },
   isActive: { type: Boolean, required: true, default: true },
-  defaultVPA: { type: String, required: true, default: "" },
+  defaultVPA: { type: String, required: true, default: "X" },
+  provider: { type: String, required: true },
+  displayName: { type: String, required: true },
 });
 
 const User = mongoose.model<IUser>("User", userScheme);
