@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import { TCurrency, TTransactionStatus } from "../../utils/types";
 
 interface ITransaction extends Document {
+  ownerID: string;
   projectID: string;
   userVPA: string;
   amount: number;
@@ -18,6 +19,7 @@ type TNewTransaction = Omit<ITransaction, "_id" | "projectID">;
 
 const transactionScheme: Schema<ITransaction> = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
+  ownerID: { type: String, required: true, ref: "User" },
   projectID: { type: String, required: true, ref: "Project" },
   userVPA: { type: String, required: true },
   amount: { type: Number, required: true },

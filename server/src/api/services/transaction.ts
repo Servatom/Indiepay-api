@@ -54,6 +54,18 @@ export const transactionService = {
     }
   },
 
+  getTransactionsByUser: async (
+    userID: string
+  ): Promise<ITransaction[] | null> => {
+    try {
+      const result = await Transaction.find({ ownerID: userID });
+      return result;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  },
+
   updateTransactionStatus: async (
     transactionID: string,
     status: TTransactionStatus

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUser, User } from "../models/user";
+import { User } from "../models/user";
 import jwt from "jsonwebtoken";
 import { auth } from "../../firebaseAdmin";
 
@@ -41,7 +41,7 @@ export const userService = {
         },
         process.env.JWT_KEY!,
         {
-          expiresIn: "60d",
+          expiresIn: "7d",
         }
       );
 
