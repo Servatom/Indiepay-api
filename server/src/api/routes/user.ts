@@ -10,7 +10,7 @@ const router = express.Router();
 router.post(
   "/login",
   async (req: LoginRequest, res: Response, next: NextFunction) => {
-    const { token, firebaseUID, email, provider, displayName } = req.body;
+    const { token, email, provider, displayName } = req.body;
     // check if user exists in db with phoneNumber and firebaseUID combination
     // if not, create new user
     // return jwt
@@ -19,7 +19,6 @@ router.post(
     try {
       const result = (await userService.loginUser(
         token,
-        firebaseUID,
         email,
         provider,
         displayName
@@ -134,6 +133,27 @@ router.post(
     res.status(200).json({
       message: "User verified",
     });
+  }
+);
+
+router.get(
+  "/dashboardStats",
+  checkAuth,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const userID = req.userData!._id;
+    try {
+      const result = await userService.getDashboardStats(userID);
+      return res.status(200).json({
+        message: "Dashboard stats fetched",
+        data: result,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Internal Server Error",
+        error: err,
+      });
+    }
   }
 );
 

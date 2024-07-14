@@ -13,3 +13,18 @@ export interface CustomError extends Error {
 export type TCurrency = "INR" | "USD" | "EUR";
 export type TTransactionStatus = "ACCEPTED" | "PENDING" | "REJECTED";
 export type TWebhookStatus = "SUCCESS" | "FAILURE";
+
+export type TDashboardStats = {
+  totalApps: number;
+  totalOrders: number;
+  totalRevenue: number;
+  apps: TAppStat[];
+};
+
+export type TAppStat = {
+  _id: string;
+  name: string;
+  pendingOrders: number;
+  totalOrders: number;
+  revenue: number;
+};

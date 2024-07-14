@@ -5,7 +5,6 @@ import { IUser } from "../models/user";
 export interface LoginRequest extends Request {
   body: {
     token: string;
-    firebaseUID: string;
     email: string;
     provider: string;
     displayName: string;

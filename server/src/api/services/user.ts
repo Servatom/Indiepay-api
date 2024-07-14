@@ -2,30 +2,32 @@ import mongoose from "mongoose";
 import { User } from "../models/user";
 import jwt from "jsonwebtoken";
 import { auth } from "../../firebaseAdmin";
+import { projectService } from "./project";
+import { TAppStat, TDashboardStats } from "../../utils/types";
+import { transactionService } from "./transaction";
 
 export const userService = {
   loginUser: async (
     token: string,
-    firebaseUID: string,
     email: string,
     provider: string,
     displayName: string
   ) => {
     try {
       const decodedToken = await auth.verifyIdToken(token);
-      if (decodedToken.uid !== firebaseUID) {
+      if (!decodedToken.uid) {
         return null;
       }
 
       let result = await User.findOne({
-        firebaseUID: firebaseUID,
+        firebaseUID: decodedToken.uid,
       });
 
       if (!result) {
         const user = new User({
           _id: new mongoose.Types.ObjectId(),
           email: email,
-          firebaseUID: firebaseUID,
+          firebaseUID: decodedToken.uid,
           provider: provider,
           displayName: displayName,
         });
@@ -37,7 +39,7 @@ export const userService = {
         {
           email: result.email,
           userID: result._id,
-          firebaseUID: firebaseUID,
+          firebaseUID: result.firebaseUID,
         },
         process.env.JWT_KEY!,
         {
@@ -75,6 +77,61 @@ export const userService = {
     } catch (err) {
       console.log(err);
       return err;
+    }
+  },
+
+  getDashboardStats: async (
+    ownerID: string
+  ): Promise<TDashboardStats | null> => {
+    try {
+      const result = await projectService.getProjectsByOwnerID(ownerID);
+      if (!result) {
+        return null;
+      }
+
+      let stats: TDashboardStats = {
+        totalApps: result.length,
+        totalOrders: 0,
+        totalRevenue: 0,
+        apps: [],
+      };
+
+      const txnPromise = result.map(async (project) => {
+        return await transactionService.getTransactionsByProject(project._id);
+      });
+
+      const txns = await Promise.all(txnPromise);
+
+      result.map((project, idx) => {
+        let app: TAppStat = {
+          _id: project._id,
+          name: project.name,
+          totalOrders: 0,
+          pendingOrders: 0,
+          revenue: 0,
+        };
+
+        const transactions = txns[idx] || [];
+        stats.totalOrders += transactions.length;
+        transactions.forEach((transaction) => {
+          if (transaction.status === "ACCEPTED") {
+            stats.totalRevenue += transaction.amount;
+            app.revenue += transaction.amount;
+          }
+          if (transaction.status === "PENDING") {
+            app.pendingOrders++;
+          }
+          app.totalOrders++;
+        });
+        console.log(app);
+        stats.apps.push(app);
+      });
+      console.log(stats);
+
+      return stats;
+    } catch (err) {
+      console.log(err);
+      return null;
     }
   },
 };
