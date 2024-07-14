@@ -34,3 +34,17 @@ export interface CreateRecordRequest extends AuthenticatedRequest {
     domainID: string;
   };
 }
+
+/* -------------- Project   -------------- */
+export interface CreateProjectRequest extends AuthenticatedRequest {
+  body: {
+    appName: string;
+    webhookURL: string;
+    callbackURL?: string;
+    vpa: string;
+  };
+}
+
+export interface UpdateProjectRequest extends AuthenticatedRequest {
+  body: IProject;
+}

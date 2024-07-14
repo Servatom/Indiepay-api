@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { IProject, Project } from "../models/project";
+import { IProject, Project, TNewProject } from "../models/project";
 
 export const projectService = {
-  createProject: async (project: IProject): Promise<IProject | unknown> => {
+  createProject: async (project: TNewProject): Promise<IProject | unknown> => {
     try {
       const newProject = new Project({
         _id: new mongoose.Types.ObjectId(),
@@ -12,7 +12,6 @@ export const projectService = {
         callbackURL: project.callbackURL,
         vpa: project.vpa,
         totalRevenue: 0,
-        QRImageS3URL: project.QRImageS3URL,
       });
 
       const result: IProject = await newProject.save();

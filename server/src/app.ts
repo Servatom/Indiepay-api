@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import { userRoutes } from "./api/routes";
+import { projectRoutes, userRoutes } from "./api/routes";
 import { CustomError } from "./utils/types";
 
 const app = express();
@@ -27,6 +27,7 @@ app.get("/health", (req: Request, res: Response, next: NextFunction) => {
   res.send("Up and Running!");
 });
 app.use("/user", userRoutes);
+app.use("/project", projectRoutes);
 // app.use("/record", recordRoutes);
 
 // Error handling
