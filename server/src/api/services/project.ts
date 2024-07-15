@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { IProject, Project, TNewProject } from "../models/project";
+import { Transaction } from "../models/transaction";
 
 export const projectService = {
   createProject: async (project: TNewProject): Promise<IProject | unknown> => {
@@ -65,6 +66,10 @@ export const projectService = {
     try {
       await Project.deleteOne({
         _id: projectID,
+      });
+
+      await Transaction.deleteMany({
+        projectID: projectID,
       });
       return true;
     } catch (err) {

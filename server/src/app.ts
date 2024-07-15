@@ -23,12 +23,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+const apiVersion = process.env.API_VERSION || "/v1";
+
 app.get("/health", (req: Request, res: Response, next: NextFunction) => {
   res.send("Up and Running!");
 });
-app.use("/user", userRoutes);
-app.use("/project", projectRoutes);
-// app.use("/record", recordRoutes);
+app.use(apiVersion + "/user", userRoutes);
+app.use(apiVersion + "/project", projectRoutes);
 
 // Error handling
 app.use((req: Request, res: Response, next: NextFunction) => {
