@@ -1,26 +1,29 @@
 import mongoose from "mongoose";
 import {
   ITransaction,
-  TNewTransaction,
+  INewTransaction,
   Transaction,
 } from "../models/transaction";
 import { TTransactionStatus } from "../../utils/types";
 
 export const transactionService = {
   addTransaction: async (
-    transaction: TNewTransaction,
-    projectID: string
+    transaction: INewTransaction,
+    projectID: string,
+    ownerID: string
   ): Promise<ITransaction | unknown> => {
     try {
       const newTransaction = new Transaction({
         _id: new mongoose.Types.ObjectId(),
+        ownerID: ownerID,
         projectID: projectID,
+        upiRefID: transaction.upiRefID,
         userVPA: transaction.userVPA,
         amount: transaction.amount,
         currency: transaction.currency,
         status: "PENDING",
         metadata: transaction.metadata,
-        timestamp: new Date(),
+        timestamp: transaction.timestamp ? transaction.timestamp : new Date(),
       });
       const result: ITransaction = await newTransaction.save();
       return result;
@@ -67,12 +70,13 @@ export const transactionService = {
   },
 
   updateTransactionStatus: async (
+    ownerID: string,
     transactionID: string,
     status: TTransactionStatus
   ) => {
     try {
       const result = await Transaction.findOneAndUpdate(
-        { _id: transactionID },
+        { _id: transactionID, ownerID: ownerID },
         { status: status },
         { new: true }
       );

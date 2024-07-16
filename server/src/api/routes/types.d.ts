@@ -1,6 +1,12 @@
 import { Request } from "express";
-import { AuthenticatedRequest, TRecordType } from "../../utils/types";
+import {
+  AuthenticatedRequest,
+  TCurrency,
+  TRecordType,
+  TTransactionStatus,
+} from "../../utils/types";
 import { IUser } from "../models/user";
+import { INewTransaction } from "../models/transaction";
 
 export interface LoginRequest extends Request {
   body: {
@@ -46,4 +52,26 @@ export interface CreateProjectRequest extends AuthenticatedRequest {
 
 export interface UpdateProjectRequest extends AuthenticatedRequest {
   body: IProject;
+}
+
+/* -------------- Transaction -------------- */
+
+export interface CreateTransactionRequest extends Request {
+  // Not have to be Authenticated req
+  body: {
+    upiRefID: string;
+    userVPA: string;
+    amount: number;
+    currency: TCurrency;
+    metadata: {
+      [key: string]: any;
+    };
+    timestamp?: Date;
+  };
+}
+
+export interface ResolveTransactionRequest extends AuthenticatedRequest {
+  body: {
+    status: TTransactionStatus;
+  };
 }

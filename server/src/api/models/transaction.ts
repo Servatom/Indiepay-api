@@ -1,30 +1,31 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { TCurrency, TTransactionStatus } from "../../utils/types";
 
-interface ITransaction extends Document {
-  ownerID: string;
-  projectID: string;
+interface INewTransaction {
+  upiRefID: string;
   userVPA: string;
   amount: number;
   currency: TCurrency;
-  status: TTransactionStatus;
   metadata: {
-    [key: string]: string;
+    [key: string]: any;
   };
   timestamp: Date;
 }
-
-// Create a type for NewTransaction, which is a subset of ITransaction with the _id, projectID field omitted
-type TNewTransaction = Omit<ITransaction, "_id" | "projectID">;
+interface ITransaction extends Document, INewTransaction {
+  status: TTransactionStatus;
+  ownerID: string;
+  projectID: string;
+}
 
 const transactionScheme: Schema<ITransaction> = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   ownerID: { type: String, required: true, ref: "User" },
   projectID: { type: String, required: true, ref: "Project" },
+  upiRefID: { type: String, required: true },
   userVPA: { type: String, required: true },
   amount: { type: Number, required: true },
   currency: { type: String, required: true },
-  status: { type: String, required: true },
+  status: { type: String, required: true, default: "PENDING" },
   metadata: { type: Object, required: true },
   timestamp: { type: Date, required: true },
 });
@@ -34,4 +35,4 @@ const Transaction = mongoose.model<ITransaction>(
   transactionScheme
 );
 
-export { Transaction, ITransaction, TNewTransaction };
+export { Transaction, ITransaction, INewTransaction };
