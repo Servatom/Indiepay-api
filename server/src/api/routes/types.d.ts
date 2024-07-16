@@ -64,7 +64,7 @@ export interface CreateTransactionRequest extends Request {
     userVPA: string;
     amount: number;
     currency: TCurrency;
-    metadata: {
+    metadata?: {
       [key: string]: any;
     };
     timestamp?: Date;

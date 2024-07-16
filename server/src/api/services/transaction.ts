@@ -80,6 +80,9 @@ export const transactionService = {
         { status: status },
         { new: true }
       );
+
+      // add webhook item to redis queue here
+
       return result;
     } catch (err) {
       console.log(err);

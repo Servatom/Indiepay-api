@@ -24,7 +24,7 @@ router.post(
       req.body;
     const projectID = req.params.projectID;
 
-    if (!upiRefID || !userVPA || !amount || !currency || !metadata) {
+    if (!upiRefID || !userVPA || !amount || !currency) {
       return res.status(400).json({
         message: "Missing required fields",
       });

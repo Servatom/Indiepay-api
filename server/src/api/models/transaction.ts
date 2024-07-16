@@ -6,7 +6,7 @@ interface INewTransaction {
   userVPA: string;
   amount: number;
   currency: TCurrency;
-  metadata: {
+  metadata?: {
     [key: string]: any;
   };
   timestamp: Date;
@@ -26,7 +26,7 @@ const transactionScheme: Schema<ITransaction> = new mongoose.Schema({
   amount: { type: Number, required: true },
   currency: { type: String, required: true },
   status: { type: String, required: true, default: "PENDING" },
-  metadata: { type: Object, required: true },
+  metadata: { type: Object, required: false },
   timestamp: { type: Date, required: true },
 });
 
