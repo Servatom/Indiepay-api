@@ -68,6 +68,35 @@ router.post(
 );
 
 router.get(
+  "/all",
+  checkAuth,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const userID = req.userData!._id;
+    // get projectID from query params
+    const projectID = req.query.projectID as string;
+    console.log(projectID);
+    try {
+      let result;
+      if (projectID) {
+        result = await transactionService.getTransactionsByProject(projectID);
+      } else {
+        result = await transactionService.getTransactionsByUser(userID);
+      }
+      return res.status(200).json({
+        message: "Projects fetched successfully",
+        data: result,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Internal server error",
+        error: err,
+      });
+    }
+  }
+);
+
+router.get(
   "/:transactionID",
   checkAuth,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -87,34 +116,6 @@ router.get(
       }
       return res.status(200).json({
         message: "Transaction fetched successfully",
-        data: result,
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Internal server error",
-        error: err,
-      });
-    }
-  }
-);
-
-router.get(
-  "/all",
-  checkAuth,
-  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const userID = req.userData!._id;
-    // get projectID from query params
-    const projectID = req.query.projectID as string;
-    try {
-      let result;
-      if (projectID) {
-        result = await transactionService.getTransactionsByProject(projectID);
-      } else {
-        result = await transactionService.getTransactionsByUser(userID);
-      }
-      return res.status(200).json({
-        message: "Projects fetched successfully",
         data: result,
       });
     } catch (err) {

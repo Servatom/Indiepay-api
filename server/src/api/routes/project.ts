@@ -48,7 +48,7 @@ router.get(
   "/:projectID",
   checkAuth,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const userID = req.userData!._id;
+    const userID = String(req.userData!._id);
     const projectID = req.params.projectID;
     try {
       const result = await projectService.getProject(projectID);
