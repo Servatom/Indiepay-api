@@ -33,6 +33,7 @@ router.post(
           message: "Login successful",
           token: result.token,
           user: result.user,
+          appAuthToken: result.appAuthToken,
         });
       }
     } catch (err) {
@@ -55,7 +56,8 @@ router.get(
       if (result) {
         return res.status(200).json({
           message: "User found",
-          user: result,
+          user: result.user,
+          appAuthToken: result.appAuthToken,
         });
       } else {
         return res.status(404).json({
@@ -156,5 +158,18 @@ router.get(
     }
   }
 );
+
+// router.get(
+//   "/appAuthToken",
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const appAuthToken = req.query.token as string;
+//     console.log(appAuthToken);
+//     const userID = decrypt(appAuthToken);
+//     return res.status(200).json({
+//       message: "User found",
+//       userID,
+//     });
+//   }
+// );
 
 export default router;

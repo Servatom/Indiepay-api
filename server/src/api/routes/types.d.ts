@@ -20,6 +20,7 @@ export interface LoginRequest extends Request {
 export interface AuthResponse {
   token: string;
   user: IUser;
+  appAuthToken: string;
 }
 
 export interface UpdateUserRequest extends AuthenticatedRequest {

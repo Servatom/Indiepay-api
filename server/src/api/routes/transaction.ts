@@ -24,6 +24,12 @@ router.post(
       req.body;
     const projectID = req.params.projectID;
 
+    if (!upiRefID || !userVPA || !amount || !currency || !metadata) {
+      return res.status(400).json({
+        message: "Missing required fields",
+      });
+    }
+
     try {
       const user = await User.findOne({ _id: userID });
       if (!user) {

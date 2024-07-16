@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import { projectRoutes, userRoutes } from "./api/routes";
+import { projectRoutes, transactionRoutes, userRoutes } from "./api/routes";
 import { CustomError } from "./utils/types";
 
 const app = express();
@@ -30,6 +30,7 @@ app.get("/health", (req: Request, res: Response, next: NextFunction) => {
 });
 app.use(apiVersion + "/user", userRoutes);
 app.use(apiVersion + "/project", projectRoutes);
+app.use(apiVersion + "/transaction", transactionRoutes);
 
 // Error handling
 app.use((req: Request, res: Response, next: NextFunction) => {

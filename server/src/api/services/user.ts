@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
-import { User } from "../models/user";
+import { IUser, User } from "../models/user";
 import jwt from "jsonwebtoken";
 import { auth } from "../../firebaseAdmin";
 import { projectService } from "./project";
 import { TAppStat, TDashboardStats } from "../../utils/types";
 import { transactionService } from "./transaction";
+import { encrypt } from "../../utils/utils";
 
 export const userService = {
   loginUser: async (
@@ -47,21 +48,33 @@ export const userService = {
         }
       );
 
-      return { token: jwtToken, user: result };
+      const appAuthToken = encrypt(String(result._id));
+
+      return { token: jwtToken, user: result, appAuthToken };
     } catch (err) {
       console.log(err);
       throw err;
     }
   },
 
-  getUser: async (userID: string) => {
+  getUser: async (
+    userID: string
+  ): Promise<{
+    user: IUser;
+    appAuthToken: string;
+  } | null> => {
     try {
       const result = await User.findOne({ _id: userID });
-
-      return result;
+      if (!result) {
+        return null;
+      }
+      return {
+        user: result,
+        appAuthToken: encrypt(String(result._id)),
+      };
     } catch (err) {
       console.log(err);
-      return err;
+      throw err;
     }
   },
 
