@@ -6,11 +6,15 @@ export interface AuthenticatedRequest extends Request {
   userData?: IUser;
 }
 
+export interface SDKRequest extends Request {
+  userID?: string;
+}
+
 export interface CustomError extends Error {
   status?: number;
 }
 
-export type TCurrency = "INR" | "USD" | "EUR";
+export type TCurrency = "INR";
 export type TTransactionStatus = "ACCEPTED" | "PENDING" | "REJECTED";
 export type TWebhookStatus = "SUCCESS" | "FAILURE";
 
@@ -27,4 +31,10 @@ export type TAppStat = {
   pendingOrders: number;
   totalOrders: number;
   revenue: number;
+};
+
+export type TSDKProduct = {
+  id: string;
+  title: string;
+  description: string;
 };

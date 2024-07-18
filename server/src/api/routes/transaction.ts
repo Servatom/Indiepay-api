@@ -6,19 +6,15 @@ import { User } from "../models/user";
 import { decrypt } from "../../utils/utils";
 import { INewTransaction } from "../models/transaction";
 import { transactionService } from "../services/transaction";
+import checkSDKCreds from "../middleware/check-sdk-creds";
 
 const router = express.Router();
 
 router.post(
   "/:projectID",
+  checkSDKCreds,
   async (req: CreateTransactionRequest, res: Response, next: NextFunction) => {
-    const authToken = req.headers.authorization?.split(" ")[1];
-    if (!authToken) {
-      return res.status(401).json({
-        message: "No token provided. Auth failed",
-      });
-    }
-    const userID = decrypt(authToken);
+    const userID = req.userID!;
 
     const { upiRefID, userVPA, amount, currency, metadata, timestamp } =
       req.body;

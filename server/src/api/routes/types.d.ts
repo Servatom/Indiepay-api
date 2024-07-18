@@ -1,8 +1,10 @@
 import { Request } from "express";
 import {
   AuthenticatedRequest,
+  SDKRequest,
   TCurrency,
   TRecordType,
+  TSDKProduct,
   TTransactionStatus,
 } from "../../utils/types";
 import { IUser } from "../models/user";
@@ -57,7 +59,7 @@ export interface UpdateProjectRequest extends AuthenticatedRequest {
 
 /* -------------- Transaction -------------- */
 
-export interface CreateTransactionRequest extends Request {
+export interface CreateTransactionRequest extends SDKRequest {
   // Not have to be Authenticated req
   body: {
     upiRefID: string;
@@ -74,5 +76,16 @@ export interface CreateTransactionRequest extends Request {
 export interface ResolveTransactionRequest extends AuthenticatedRequest {
   body: {
     status: TTransactionStatus;
+  };
+}
+
+export interface CreateSDKTransactionRequest extends SDKRequest {
+  body: {
+    amount: number;
+    currency: TCurrency;
+    productInfo: TSDKProduct;
+    metadata?: {
+      [key: string]: any;
+    };
   };
 }
