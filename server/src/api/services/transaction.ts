@@ -5,6 +5,12 @@ import {
   Transaction,
 } from "../models/transaction";
 import { TTransactionStatus } from "../../utils/types";
+import {
+  INewTransactionRequest,
+  ITransactionRequest,
+  TransactionRequest,
+} from "../models/transactionRequest";
+import { IProject } from "../models/project";
 
 export const transactionService = {
   addTransaction: async (
@@ -29,7 +35,7 @@ export const transactionService = {
       return result;
     } catch (err) {
       console.log(err);
-      return err;
+      throw err;
     }
   },
 
@@ -86,7 +92,64 @@ export const transactionService = {
       return result;
     } catch (err) {
       console.log(err);
-      return null;
+      throw err;
+    }
+  },
+
+  /** ----------------- Transaction Request ----------------- */
+
+  createTransactionRequest: async (
+    transactionRequestData: INewTransactionRequest,
+    project: IProject
+  ) => {
+    try {
+      const newTransactionRequest = new TransactionRequest({
+        _id: new mongoose.Types.ObjectId(),
+        ownerID: project.ownerID,
+        projectID: project._id,
+        merchantVPA: project.vpa,
+        amount: transactionRequestData.amount,
+        currency: transactionRequestData.currency,
+        productInfo: transactionRequestData.productInfo,
+        metadata: transactionRequestData.metadata,
+        status: "UNUSED",
+      });
+
+      const result = await newTransactionRequest.save();
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
+
+  findTransactionRequest: async (
+    transactionRequestID: string
+  ): Promise<ITransactionRequest | null> => {
+    try {
+      const result = await TransactionRequest.findOne({
+        _id: transactionRequestID,
+      });
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
+
+  markTransactionRequestUsed: async (
+    transactionRequestID: string
+  ): Promise<ITransactionRequest | null> => {
+    try {
+      const result = await TransactionRequest.findOneAndUpdate(
+        { _id: transactionRequestID },
+        { status: "USED" },
+        { new: true }
+      );
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
   },
 };
