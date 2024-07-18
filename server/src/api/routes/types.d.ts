@@ -89,3 +89,11 @@ export interface CreateSDKTransactionRequest extends SDKRequest {
     };
   };
 }
+
+export interface PostSDKTransactionRequest extends Request {
+  body: {
+    upiRefID: string;
+    userVPA: string;
+    timestamp?: string;
+  };
+}
