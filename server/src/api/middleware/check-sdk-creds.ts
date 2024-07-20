@@ -14,9 +14,17 @@ const checkSDKCreds = async (
       message: "No token provided. Auth failed",
     });
   }
-  const userID = decrypt(authToken);
 
-  req.userID = userID;
+  try {
+    const userID = decrypt(authToken);
+
+    req.userID = userID;
+  } catch (err) {
+    return res.status(401).json({
+      message: "Invalid Auth Token",
+    });
+  }
+
   next();
 };
 

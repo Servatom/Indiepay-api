@@ -54,7 +54,7 @@ router.post(
       const project = await projectService.getProject(projectID);
       if (!project) {
         return res.status(404).json({
-          message: "Project not found",
+          message: "Invalid App ID. Project not found.",
         });
       }
       if (project.ownerID !== userID) {
@@ -82,10 +82,11 @@ router.post(
 );
 
 router.post(
-  "submitTransaction/:transactionRequestID",
+  "/submitTransaction/:transactionRequestID",
   async (req: PostSDKTransactionRequest, res: Response, next: NextFunction) => {
     const { upiRefID, userVPA, timestamp } = req.body;
     const transactionRequestID = req.params.transactionRequestID;
+    console.log(req.body, transactionRequestID);
 
     try {
       const transactionRequest =
@@ -96,7 +97,7 @@ router.post(
         });
       }
 
-      if (transactionRequest.status === "UNUSED") {
+      if (transactionRequest.status === "USED") {
         return res.status(400).json({
           message: "Transaction request already used",
         });
