@@ -18,6 +18,7 @@ interface ITransactionRequest extends Document, INewTransactionRequest {
   projectID: string;
   merchantVPA: string;
   status: TTransactionRequestStatus;
+  createdAt?: Date;
 }
 
 const transactionRequestScheme: Schema<ITransactionRequest> =
@@ -31,6 +32,7 @@ const transactionRequestScheme: Schema<ITransactionRequest> =
     currency: { type: String, required: true },
     metadata: { type: Object, required: false },
     productInfo: { type: Object, required: true },
+    createdAt: { type: Date, default: Date.now },
   });
 
 const TransactionRequest = mongoose.model<ITransactionRequest>(
