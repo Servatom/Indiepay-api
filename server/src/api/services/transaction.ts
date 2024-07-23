@@ -103,6 +103,16 @@ export const transactionService = {
     project: IProject
   ) => {
     try {
+      const existingTransactionRequest = await TransactionRequest.findOne({
+        projectID: project._id,
+        "productInfo.id": transactionRequestData.productInfo.id,
+        status: "UNUSED",
+      });
+
+      if (existingTransactionRequest) {
+        return existingTransactionRequest;
+      }
+
       const newTransactionRequest = new TransactionRequest({
         _id: new mongoose.Types.ObjectId(),
         ownerID: project.ownerID,
