@@ -37,6 +37,14 @@ app.use(apiVersion + "/project", projectRoutes);
 app.use(apiVersion + "/transaction", transactionRoutes);
 app.use(apiVersion + "/sdk", sdkRoutes);
 
+app.post(apiVersion + "/webhookTest", (req: Request, res: Response) => {
+  console.log(req.body);
+
+  res.status(200).json({
+    message: "Webhook received",
+  });
+});
+
 // Error handling
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: CustomError = new Error("Not found");

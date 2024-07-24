@@ -3,7 +3,7 @@ import axios from "axios";
 import { webhookService } from "./api/services/webhook";
 
 const client = {
-  host: process.env.REDIS_HOST || "http://localhost",
+  host: process.env.REDIS_HOST || "localhost",
   port: parseInt(process.env.REDIS_PORT!) || 6379,
 };
 const queueName = "webhookQueue";
@@ -48,7 +48,7 @@ const worker = new Worker(
         throw new Error("Non-200 response");
       }
     } catch (error) {
-      if (job.attemptsMade >= (job.opts.attempts || 4)) {
+      if (job.attemptsMade >= (job.opts.attempts || 3)) {
         // update webhook status to failed
         await webhookService.updateWebhookStatus(webhookID, "FAILURE");
       }
