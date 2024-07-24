@@ -10,7 +10,10 @@ import {
   ITransactionRequest,
   TransactionRequest,
 } from "../models/transactionRequest";
-import { IProject } from "../models/project";
+import { IProject, Project } from "../models/project";
+import { jobOptions, webhookQueue } from "../../queue";
+import { webhookService } from "./webhook";
+import { IWebhook } from "../models/webhook";
 
 export const transactionService = {
   addTransaction: async (
@@ -87,7 +90,38 @@ export const transactionService = {
         { new: true }
       );
 
+      if (!result) {
+        return new Error("Transaction not found");
+      }
       // add webhook item to redis queue here
+
+      // find project with projectID from transaction
+      const project = await Project.findOne({ _id: result.projectID });
+      if (!project) {
+        return new Error("Project not found");
+      }
+
+      if (project.webhookURL) {
+        const webhook = await webhookService.addWebhook({
+          projectID: project._id,
+          status: "PENDING",
+          transactionData: result,
+          url: project.webhookURL,
+          createdAt: new Date(),
+        });
+
+        if (!webhook) {
+          return new Error("Webhook could not be triggered");
+        }
+
+        const redisQueueItem = {
+          url: project.webhookURL,
+          payload: result,
+          webhookID: webhook._id,
+        };
+
+        await webhookQueue.add("webhookJob", redisQueueItem, jobOptions);
+      }
 
       return result;
     } catch (err) {

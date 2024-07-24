@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
-import { IWebhook, TNewWebhook, Webhook } from "../models/webhook";
+import { IWebhook, INewWebhook, Webhook } from "../models/webhook";
+import { TWebhookStatus } from "../../utils/types";
 
 export const webhookService = {
-  addWebhook: async (webhook: TNewWebhook): Promise<IWebhook | unknown> => {
+  addWebhook: async (webhook: INewWebhook): Promise<IWebhook | null> => {
     try {
       const newWebhook = new Webhook({
         _id: new mongoose.Types.ObjectId(),
@@ -12,7 +13,7 @@ export const webhookService = {
       return result;
     } catch (err) {
       console.log(err);
-      return err;
+      throw err;
     }
   },
 
@@ -21,6 +22,23 @@ export const webhookService = {
   ): Promise<IWebhook[] | null> => {
     try {
       const result = await Webhook.find({ projectID: projectID });
+      return result;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  },
+
+  updateWebhookStatus: async (
+    webhookID: string,
+    status: TWebhookStatus,
+    deliveredAt?: Date
+  ): Promise<IWebhook | null> => {
+    try {
+      const result = await Webhook.findOneAndUpdate(
+        { _id: webhookID },
+        { status: status, deliveredAt: deliveredAt }
+      );
       return result;
     } catch (err) {
       console.log(err);

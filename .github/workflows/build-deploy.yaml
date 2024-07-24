@@ -60,8 +60,6 @@ jobs:
           # Navigate to your project directory
           cd /home/ubuntu/projects/indiepay
 
-          sed -i 's|image: .*$|image: ${{ secrets.DOCKER_USERNAME }}/${{secrets.DOCKER_IMAGE_NAME}}|' docker-compose.yml
-
           # Restart the Docker containers using Docker Compose
           docker-compose down
           docker-compose up -d
