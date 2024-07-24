@@ -1,9 +1,7 @@
 FROM node:18 as base
 # Create app directory
 WORKDIR /server
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+
 COPY package*.json ./
 
 # RUN npm install
@@ -13,17 +11,17 @@ RUN npm install
 # Install TypeScript globally
 RUN npm install -g typescript
 
+# Build Stage
 FROM base as build
-
 WORKDIR /server
 
 # Bundle app source
 COPY . .
-
 # Build the app
 RUN npm run tsc
 
 
+# Final Stage
 FROM node:18-alpine
 
 WORKDIR /server
@@ -45,6 +43,3 @@ USER node
 
 # Expose the port the app runs on
 EXPOSE 5000
-
-# Serve the app
-CMD [ "node", "dist/server.js" ]

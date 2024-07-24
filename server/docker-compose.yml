@@ -7,3 +7,16 @@ services:
       - "5000:5000"
     env_file:
       - .env
+    command: ["node", "dist/server.js"]
+
+  # worker:
+  #   image: yashvardhan2210/indiepay-backend
+  #   env_file:
+  #     - .env
+  #   command: ["node", "dist/queue.js"]
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
