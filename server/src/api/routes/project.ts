@@ -2,7 +2,11 @@ import express, { NextFunction, Response } from "express";
 import checkAuth from "../middleware/check-auth";
 import { projectService } from "../services/project";
 import { AuthenticatedRequest } from "../../utils/types";
-import { CreateProjectRequest, UpdateProjectRequest } from "./types";
+import {
+  CreateProjectRequest,
+  ProjectIntegrationRequest,
+  UpdateProjectRequest,
+} from "./types";
 import { TNewProject } from "../models/project";
 import { User } from "../models/user";
 
@@ -85,6 +89,36 @@ router.get(
       const result = await projectService.getProjectsByOwnerID(userID);
       return res.status(200).json({
         message: "Projects fetched successfully",
+        data: result,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Internal server error",
+        error: err,
+      });
+    }
+  }
+);
+
+router.post(
+  "/:projectID/request-integration",
+  checkAuth,
+  async (req: ProjectIntegrationRequest, res: Response, next: NextFunction) => {
+    const projectID = req.params.projectID;
+    const integrationType = req.body.type;
+    try {
+      const result = await projectService.requestIntegration(
+        integrationType,
+        projectID
+      );
+      if (!result) {
+        return res.status(404).json({
+          message: "Project not found",
+        });
+      }
+      return res.status(200).json({
+        message: "Integration request sent successfully",
         data: result,
       });
     } catch (err) {

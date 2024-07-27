@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { IProject, Project, TNewProject } from "../models/project";
 import { Transaction } from "../models/transaction";
+import { TIntegratoionType } from "../../utils/types";
 
 export const projectService = {
   createProject: async (project: TNewProject): Promise<IProject | unknown> => {
@@ -59,6 +60,25 @@ export const projectService = {
     } catch (err) {
       console.log(err);
       return null;
+    }
+  },
+
+  requestIntegration: async (
+    integrationType: TIntegratoionType,
+    projectID: string
+  ): Promise<IProject | null> => {
+    try {
+      const result = await Project.findOneAndUpdate(
+        { _id: projectID },
+        { [`hasRequested${integrationType}Integration`]: true },
+        {
+          new: true,
+        }
+      );
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
   },
 

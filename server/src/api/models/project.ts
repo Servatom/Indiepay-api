@@ -7,6 +7,8 @@ interface TNewProject {
   callbackURL?: string;
   vpa: string;
   totalRevenue: number;
+  hasRequestedSlackIntegration?: boolean;
+  hasRequestedDiscordIntegration?: boolean;
 }
 
 interface IProject extends Document, TNewProject {}
@@ -19,6 +21,16 @@ const projectScheme: Schema<IProject> = new mongoose.Schema({
   callbackURL: { type: String, required: false },
   vpa: { type: String, required: true },
   totalRevenue: { type: Number, required: true, default: 0 },
+  hasRequestedSlackIntegration: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  hasRequestedDiscordIntegration: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const Project = mongoose.model<IProject>("Project", projectScheme);

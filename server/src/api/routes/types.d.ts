@@ -3,6 +3,7 @@ import {
   AuthenticatedRequest,
   SDKRequest,
   TCurrency,
+  TIntegratoionType,
   TRecordType,
   TSDKProduct,
   TTransactionStatus,
@@ -55,6 +56,12 @@ export interface CreateProjectRequest extends AuthenticatedRequest {
 
 export interface UpdateProjectRequest extends AuthenticatedRequest {
   body: IProject;
+}
+
+export interface ProjectIntegrationRequest extends AuthenticatedRequest {
+  body: {
+    type: TIntegratoionType;
+  };
 }
 
 /* -------------- Transaction -------------- */

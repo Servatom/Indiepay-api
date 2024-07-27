@@ -18,6 +18,7 @@ export type TCurrency = "INR";
 export type TTransactionStatus = "ACCEPTED" | "PENDING" | "REJECTED";
 export type TTransactionRequestStatus = "USED" | "UNUSED";
 export type TWebhookStatus = "SUCCESS" | "FAILURE" | "PENDING";
+export type TIntegratoionType = "Slack" | "Discord";
 
 export type TDashboardStats = {
   totalApps: number;
