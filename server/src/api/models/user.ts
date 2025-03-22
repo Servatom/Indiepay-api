@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from "mongoose";
 
 interface IUser extends Document {
   email: string;
-  // authToken: string;
   firebaseUID: string;
   onWaitlist: boolean;
   isActive: boolean;
