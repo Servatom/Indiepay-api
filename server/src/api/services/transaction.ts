@@ -11,7 +11,7 @@ import {
   TransactionRequest,
 } from "../models/transactionRequest";
 import { IProject, Project } from "../models/project";
-import { jobOptions, webhookQueue } from "../../queue";
+// import { jobOptions, webhookQueue } from "../../queue";
 import { webhookService } from "./webhook";
 import { IWebhook } from "../models/webhook";
 
@@ -120,7 +120,7 @@ export const transactionService = {
           webhookID: webhook._id,
         };
 
-        await webhookQueue.add("webhookJob", redisQueueItem, jobOptions);
+        // await webhookQueue.add("webhookJob", redisQueueItem, jobOptions);
       }
 
       return result;
