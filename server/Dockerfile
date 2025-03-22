@@ -28,7 +28,7 @@ WORKDIR /server
 
 COPY package*.json ./
 
-RUN npm i -g npm@latest
+RUN npm i -g npm@10.2.3
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
